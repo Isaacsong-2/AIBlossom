@@ -8,4 +8,7 @@ public class ProfileRequestDto {
     private String password;
     private String introduction;
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

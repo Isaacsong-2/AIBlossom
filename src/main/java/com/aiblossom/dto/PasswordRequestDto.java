@@ -1,4 +1,4 @@
-package com.aiblossom.controller.dto;
+package com.aiblossom.dto;
 
 import lombok.Getter;
 

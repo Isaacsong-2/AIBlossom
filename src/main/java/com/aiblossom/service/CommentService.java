@@ -5,10 +5,10 @@ import com.aiblossom.dto.CommentRequestDto;
 import com.aiblossom.dto.CommentResponseDto;
 import com.aiblossom.dto.CommentUpdateRequestDto;
 import com.aiblossom.entity.Comment;
-import com.aiblossom.entity.Posts;
+import com.aiblossom.entity.Feed;
 import com.aiblossom.entity.UserRoleEnum;
 import com.aiblossom.repository.CommentRepository;
-import com.aiblossom.repository.PostsRepository;
+import com.aiblossom.repository.FeedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class CommentService {
-    private final PostsRepository postsRepository;
+    private final FeedRepository feedRepository;
     private final CommentRepository commentRepository;
 
     public CommentResponseDto save(UserDetailsImpl userDetails, CommentRequestDto requestDto) {
-        Posts posts = postsRepository.findById(requestDto.getFeedId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        Comment comment = new Comment(requestDto.getContent(), posts, userDetails.getUser());
+        Feed feed = feedRepository.findById(requestDto.getFeedId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        Comment comment = new Comment(requestDto.getContent(), feed, userDetails.getUser());
         commentRepository.save(comment);
         return new CommentResponseDto(comment, userDetails.getUsername());
     }

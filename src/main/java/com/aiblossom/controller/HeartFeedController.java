@@ -2,7 +2,7 @@ package com.aiblossom.controller;
 
 import com.aiblossom.common.dto.ApiResult;
 import com.aiblossom.common.security.UserDetailsImpl;
-import com.aiblossom.dto.PostsResponseDto;
+import com.aiblossom.dto.FeedResponseDto;
 import com.aiblossom.service.HeartFeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +15,7 @@ public class HeartFeedController {
     private final HeartFeedService heartFeedService;
 
     @PostMapping("/heart-feed/{postId}")
-    public PostsResponseDto onClickFeedHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long postId) {
+    public FeedResponseDto onClickFeedHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long postId) {
         return heartFeedService.onClickFeedkHeart(userDetails, postId);
     }
 

@@ -23,7 +23,7 @@ public class Comment extends TimeStamped{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private Posts posts;
+    private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -33,9 +33,9 @@ public class Comment extends TimeStamped{
     private List<HeartComment> heartCommentList = new ArrayList<>();
 
     @Builder
-    public Comment(String content, Posts posts, User user){
+    public Comment(String content, Feed feed, User user){
         this.content = content;
-        this.posts = posts;
+        this.feed = feed;
         this.user = user;
     }
 

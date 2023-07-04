@@ -14,16 +14,16 @@ public class HeartFeed {
     private Long heartFeedId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    Posts posts;
+    @JoinColumn(name = "feed_id")
+    Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User userEntity;
+    User user;
 
-    public HeartFeed(Posts postEntity, User userEntity) {
-        this.posts = postEntity;
-        this.userEntity = userEntity;
+    public HeartFeed(Feed feed, User user) {
+        this.feed = feed;
+        this.user = user;
     }
 
 }

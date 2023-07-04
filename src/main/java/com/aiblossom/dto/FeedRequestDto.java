@@ -6,12 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostsRequestDto {
+public class FeedRequestDto {
     private String title;
     private String content;
 
     @Builder
-    public PostsRequestDto(String title, String content){
+    public FeedRequestDto(String title, String content){
         this.title = title;
         this.content = content;
     }

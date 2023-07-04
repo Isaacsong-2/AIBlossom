@@ -2,11 +2,11 @@ package com.aiblossom.service;
 
 
 import com.aiblossom.common.security.UserDetailsImpl;
-import com.aiblossom.dto.PostsRequestDto;
-import com.aiblossom.dto.PostsResponseDto;
-import com.aiblossom.entity.Posts;
+import com.aiblossom.dto.FeedRequestDto;
+import com.aiblossom.dto.FeedResponseDto;
+import com.aiblossom.entity.Feed;
 import com.aiblossom.entity.UserRoleEnum;
-import com.aiblossom.repository.PostsRepository;
+import com.aiblossom.repository.FeedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,49 +17,49 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PostsService {
-    private final PostsRepository postsRepository;
-    public PostsResponseDto save(UserDetailsImpl userDetails, PostsRequestDto requestDto) {
-        Posts posts = Posts.builder()
+public class FeedService {
+    private final FeedRepository feedRepository;
+    public FeedResponseDto save(UserDetailsImpl userDetails, FeedRequestDto requestDto) {
+        Feed feed = Feed.builder()
                             .title(requestDto.getTitle())
                             .content(requestDto.getContent())
                             .user(userDetails.getUser())
                             .build();
-        return new PostsResponseDto(postsRepository.save(posts));
+        return new FeedResponseDto(feedRepository.save(feed));
     }
 
-    public List<PostsResponseDto> findAll() {
-        return postsRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(PostsResponseDto::new)
+    public List<FeedResponseDto> findAll() {
+        return feedRepository.findAllByOrderByCreatedAtDesc().stream()
+                .map(FeedResponseDto::new)
                 .collect(Collectors.toList());
     }
 
 
-    public PostsResponseDto findOne(Long id) {
-        return new PostsResponseDto(postsRepository.findById(id).orElseThrow(() ->
+    public FeedResponseDto findOne(Long id) {
+        return new FeedResponseDto(feedRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")));
     }
 
     @Transactional
-    public PostsResponseDto update(UserDetailsImpl userDetails, Long id, PostsRequestDto requestDto) {
+    public FeedResponseDto update(UserDetailsImpl userDetails, Long id, FeedRequestDto requestDto) {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Posts posts = postsRepository.findById(id).orElseThrow(() ->
+        Feed feed = feedRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
-        if (posts.getUser().getId().equals(userDetails.getUser().getId()) ||
+        if (feed.getUser().getId().equals(userDetails.getUser().getId()) ||
                 userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
-            posts.update(requestDto);
-            return new PostsResponseDto(posts);
+            feed.update(requestDto);
+            return new FeedResponseDto(feed);
         } else throw new IllegalArgumentException("수정 권한이 없습니다.");
     }
 
     @Transactional
     public void delete(UserDetailsImpl userDetails, Long id) {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Posts posts = postsRepository.findById(id).orElseThrow(() ->
+        Feed feed = feedRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
-        if (posts.getUser().getId().equals(userDetails.getUser().getId()) ||
+        if (feed.getUser().getId().equals(userDetails.getUser().getId()) ||
                 userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
-            postsRepository.delete(posts);
+            feedRepository.delete(feed);
         } else throw new IllegalArgumentException("삭제 권한이 없습니다.");
     }
 }

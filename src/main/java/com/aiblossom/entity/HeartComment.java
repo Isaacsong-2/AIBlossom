@@ -19,10 +19,10 @@ public class HeartComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User userEntity;
+    User user;
 
-    public HeartComment(Comment commentEntity, User userEntity) {
+    public HeartComment(Comment commentEntity, User user) {
         this.commentEntity = commentEntity;
-        this.userEntity = userEntity;
+        this.user = user;
     }
 }

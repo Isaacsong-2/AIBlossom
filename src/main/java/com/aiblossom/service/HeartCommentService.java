@@ -65,9 +65,9 @@ public class HeartCommentService {
 
     public ApiResult deleteCommentHeart(UserDetailsImpl userDetails, Long heartCommentId) {
         // 토큰 체크
-        User userEntity = userDetails.getUser();
+        User user = userDetails.getUser();
 
-        if (userEntity == null) {
+        if (user == null) {
             throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null);
         }
 
@@ -77,7 +77,7 @@ public class HeartCommentService {
         );
 
         // 좋아요 누른 본인이거나 admin일경우만 삭제가능하도록 체크
-        if (this.checkValidUser(userEntity, heartComment)) {
+        if (this.checkValidUser(user, heartComment)) {
             throw new HanghaeBlogException(HanghaeBlogErrorCode.UNAUTHORIZED_USER, null);
         }
 
@@ -88,9 +88,9 @@ public class HeartCommentService {
     /**
      * Check valid user.
      */
-    private boolean checkValidUser(User userEntity, HeartComment heartComment) {
-        boolean result = !(userEntity.getId().equals(heartComment.getUserEntity().getId()))
-                && !(userEntity.getRole().equals(ProjConst.ADMIN_ROLE));  // 작성자와 로그인사용자가 같지 않으면서 관리자계정도 아닌것이 true.
+    private boolean checkValidUser(User user, HeartComment heartComment) {
+        boolean result = !(user.getId().equals(heartComment.getUser().getId()))
+                && !(user.getRole().equals(ProjConst.ADMIN_ROLE));  // 작성자와 로그인사용자가 같지 않으면서 관리자계정도 아닌것이 true.
         return result;
     }
 }

@@ -1,10 +1,9 @@
 package com.aiblossom.controller;
 
 import com.aiblossom.common.security.UserDetailsImpl;
-import com.aiblossom.dto.PostsRequestDto;
-import com.aiblossom.dto.PostsResponseDto;
-import com.aiblossom.entity.Posts;
-import com.aiblossom.service.PostsService;
+import com.aiblossom.dto.FeedRequestDto;
+import com.aiblossom.dto.FeedResponseDto;
+import com.aiblossom.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +17,15 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/blossom")
-public class PostsApiController {
+public class FeedApiController {
 
-    private final PostsService postsService;
+    private final FeedService feedService;
 
     @PostMapping("/feed")
     @ResponseBody
-    public ResponseEntity<?> save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PostsRequestDto requestDto) {
+    public ResponseEntity<?> save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody FeedRequestDto requestDto) {
         checkToken(userDetails);
-        return ResponseEntity.ok(postsService.save(userDetails, requestDto));
+        return ResponseEntity.ok(feedService.save(userDetails, requestDto));
     }
 
     @GetMapping("/feed/manage")
@@ -36,36 +35,36 @@ public class PostsApiController {
 
     @GetMapping("/feed")
     @ResponseBody
-    public List<PostsResponseDto> findAll(){
-        return postsService.findAll();
+    public List<FeedResponseDto> findAll() {
+        return feedService.findAll();
     }
 
     @GetMapping("/feed/{id}")
     public String findOne(@PathVariable Long id, Model model){
-        PostsResponseDto responseDto = postsService.findOne(id);
+        FeedResponseDto responseDto = feedService.findOne(id);
         model.addAttribute("feed", responseDto);
         return "detail-feed";
     }
 
     @GetMapping("/feed/manage/{id}")
     public String updateManage(@PathVariable Long id, Model model){
-        PostsResponseDto responseDto = postsService.findOne(id);
+        FeedResponseDto responseDto = feedService.findOne(id);
         model.addAttribute("feed", responseDto);
         return "manageFeed";
     }
 
     @PutMapping("/feed/{id}")
     @ResponseBody
-    public ResponseEntity<?> update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody PostsRequestDto requestDto) {
+    public ResponseEntity<?> update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody FeedRequestDto requestDto) {
         checkToken(userDetails);
-        return ResponseEntity.ok(postsService.update(userDetails, id, requestDto));
+        return ResponseEntity.ok(feedService.update(userDetails, id, requestDto));
     }
 
     @DeleteMapping("/feed/{id}")
     @ResponseBody
     public ResponseEntity<String> delete(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         checkToken(userDetails);
-        postsService.delete(userDetails, id);
+        feedService.delete(userDetails, id);
         return ResponseEntity.status(HttpStatus.OK).body("게시글 삭제 성공");
     }
 
