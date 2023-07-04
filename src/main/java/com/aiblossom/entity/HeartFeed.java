@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 public class HeartFeed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "heartFeed_id")
-    private Long heartFeedId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id")

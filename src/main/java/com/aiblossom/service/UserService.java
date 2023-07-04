@@ -48,13 +48,14 @@ public class UserService {
     }
 
     @Transactional
-    public ApiResult checkPassword(UserDetailsImpl userDetails, PasswordRequestDto requestDto) {
+    public boolean checkPassword(UserDetailsImpl userDetails, PasswordRequestDto requestDto) {
         User user = userDetails.getUser();
         // 비밀번호 확인
+        System.out.println(requestDto.getPassword());
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new HanghaeBlogException(HanghaeBlogErrorCode.WRONG_PASSWORD, null);
         }
-        return new ApiResult("프로필 수정으로 넘어가기", HttpStatus.OK.value()); // 수정 페이지로 넘어가기 전 비밀번호 확인
+        return true; // 수정 페이지로 넘어가기 전 비밀번호 확인
     }
 
     @Transactional
