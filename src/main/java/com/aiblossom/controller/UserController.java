@@ -84,7 +84,7 @@ public class UserController {
 
     // 이메일 인증
     @PostMapping("/user/emailConfirm")
-
+    @ResponseBody
     public String emailConfirm(@RequestParam String email) throws Exception {
 
         String confirm = emailService.sendSimpleMessage(email);
