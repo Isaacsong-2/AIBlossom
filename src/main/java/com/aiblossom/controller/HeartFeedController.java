@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 public class HeartFeedController {
     private final HeartFeedService heartFeedService;
 
-    @PostMapping("/heart-feed/{postId}")
-    public FeedResponseDto onClickFeedHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long postId) {
-        return heartFeedService.onClickFeedkHeart(userDetails, postId);
+    @PostMapping("/heart-feed/{feedId}")
+    public FeedResponseDto onClickFeedHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long feedId) {
+        return heartFeedService.onClickFeedHeart(userDetails, feedId);
     }
 
-    @DeleteMapping("/heart-feed/{heartFeedId}")
-    public ApiResult deleteFeedHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long heartFeedId) {
-        return heartFeedService.deleteFeedHeart(userDetails, heartFeedId);
+    @DeleteMapping("/heart-feed/{feedId}")
+    public ApiResult deleteFeedHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long feedId) {
+        return heartFeedService.deleteFeedHeart(userDetails, feedId);
     }
 }

@@ -52,13 +52,19 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/user/user-info")
+    @GetMapping("/user-info")
     @ResponseBody
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUser().getUsername();
+        String introduction = userDetails.getUser().getIntroduction();
         UserRoleEnum role = userDetails.getUser().getRole();
         boolean isAdmin = (role == UserRoleEnum.ADMIN);
-        return new UserInfoDto(username, isAdmin);
+        return new UserInfoDto(username, introduction, isAdmin);
+    }
+
+    @GetMapping("/user/profile/manage")
+    public String viewProfileManage(){
+        return "profile";
     }
 
     @GetMapping("/user/profile")
@@ -69,8 +75,8 @@ public class UserController {
 
     @PostMapping("/user/profile")
     @ResponseBody
-    public ApiResult checkPassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PasswordRequestDto requestDto) {
-        return userService.checkPassword(userDetails, requestDto);
+    public PasswordResponseDto checkPassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PasswordRequestDto requestDto) {
+        return new PasswordResponseDto(userService.checkPassword(userDetails, requestDto));
     }
 
     @PutMapping("/user/profile")

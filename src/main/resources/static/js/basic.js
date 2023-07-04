@@ -18,7 +18,6 @@ function getToken() {
     if (auth === undefined) {
         return '';
     }
-
     return auth;
 }
 
@@ -58,12 +57,13 @@ function addProfile() {
                         <a class="feedHref" href="">
                             <h4>${response.username}</h4>
                             <div class="description">
-                                <p>소개</p>
+                                <p>${response.introduction}</p>
                             </div>
                         </a>
                     </div>
                     <div>
                     <button onclick="createFeed()">피드 작성</button>
+                    <button onclick="modifyProfile()">프로필 수정</button>
                     </div>
                 </div>
             `)
@@ -75,6 +75,9 @@ function addProfile() {
 }
 function createFeed() {
     window.location.href = host + "/blossom/feed/manage"
+}
+function modifyProfile(){
+    window.location.href = host + "/blossom/user/profile/manage"
 }
 
 function loadFeeds() {
@@ -116,6 +119,7 @@ function loadFeeds() {
                             <div class="description">
                                 <p>${feed.content}</p>
                             </div>
+                            <div> <p> 좋아요 개수: ${feed.heartNum}</p></div>
                         </a>
                         <div class="subInfo">
                             <span> ${feed.modifiedAt} </span>

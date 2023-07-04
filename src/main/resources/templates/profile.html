@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <title>프로필 수정</title>
+</head>
+<body>
+<div id="passwordForm">
+    <label for="title">비밀번호</label>
+    <input type="password" class="from=control" id="password" placeholder="비밀번호를 입력하세요">
+    <button onclick="checkPassword()">비밀번호 확인</button>
+</div>
+<div class="col-md-12" id="modifyForm" style="display: none">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="title">이름</label>
+                <input type="text" class="form-control" id="username" placeholder="변경할 이름을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="title">비밀번호</label>
+                <input type="" id="modifyPassword" placeholder="변경할 비밀번호를 입력하세요"></input>
+            </div>
+            <div class="form-group">
+                <label for="title">소개</label>
+                <input type="text" class="form-control" id="introduction" placeholder="소개를 입력하세요">
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary" onclick="back()">취소</button>
+        <button type="button" class="btn btn-primary" id="btn-save" onclick="modify()">수정</button>
+    </div>
+</div>
+</body>
+<script>
+    let isCorrectPassword = false;
+    let host = "http://localhost:8080"
+    $(document).ready(function () {
+        const auth = getToken();
+        if (auth !== undefined && auth !== '') {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader('Authorization', auth);
+            });
+        }
+    })
+
+    function getToken() {
+        let auth = Cookies.get('Authorization');
+        if (auth === undefined) {
+            return '';
+        }
+
+        return auth;
+    }
+
+    function checkPassword() {
+        let password = $('#password').val();
+        console.log(password)
+
+        $.ajax({
+            type: "POST",
+            url: `/blossom/user/profile`,
+            contentType: "application/json",
+            data: JSON.stringify({password: password}),
+        }).done(function () {
+            $("#passwordForm").hide();
+            $("#modifyForm").show();
+        }).fail(function () {
+            alert("비밀번호가 일치하지 않습니다")
+        })
+    }
+
+    function back(){
+        window.location.href = host
+    }
+
+    function modify(){
+        let username = $('#username').val();
+        let password = $('#modifyPassword').val();
+        let introduction = $('#introduction').val();
+        $.ajax({
+            type: "PUT",
+            url: `/blossom/user/profile`,
+            contentType: "application/json",
+            data: JSON.stringify({
+                username: username,
+                password: password,
+                introduction: introduction
+            }),
+        }).done(function () {
+            alert("프로필이 변경되었습니다.")
+            back()
+        }).fail(function () {
+            alert("프로필변경을 실패했습니다.")
+        })
+    }
+</script>
+</html>
