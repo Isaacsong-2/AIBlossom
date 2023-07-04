@@ -3,7 +3,6 @@ package com.aiblossom.controller;
 import com.aiblossom.common.dto.ApiResult;
 import com.aiblossom.common.jwt.JwtUtil;
 import com.aiblossom.common.security.UserDetailsImpl;
-import com.aiblossom.dto.PasswordRequestDto;
 import com.aiblossom.dto.*;
 import com.aiblossom.entity.UserRoleEnum;
 import com.aiblossom.service.UserService;
@@ -43,8 +42,17 @@ public class UserController {
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 저장 실패");
         }
+
         userService.signup(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("회원가입 성공");
+    }
+
+    @ResponseBody
+    @PostMapping("/user/email-auth")
+    public ResponseEntity<String> emailCheck(@RequestBody EmailAuthRequestDto requestDto){
+
+        userService.checkMail(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body("이메일 인증 성공");
     }
 
     @GetMapping("/user/login")
