@@ -58,12 +58,13 @@ function addProfile() {
                         <a class="feedHref" href="">
                             <h4>${response.username}</h4>
                             <div class="description">
-                                <p>소개</p>
+                                <p>${response.introduction}</p>
                             </div>
                         </a>
                     </div>
                     <div>
                     <button onclick="createFeed()">피드 작성</button>
+                    <button onclick="modifyProfile()">프로필 수정</button>
                     </div>
                 </div>
             `)
@@ -75,6 +76,9 @@ function addProfile() {
 }
 function createFeed() {
     window.location.href = host + "/blossom/feed/manage"
+}
+function modifyProfile(){
+    window.location.href = host + "/blossom/user/profile/manage"
 }
 
 function loadFeeds() {

@@ -90,6 +90,7 @@
         }).done(function () {
             window.location.href = host + "/blossom/feed/" + feedId
         }).fail(function () {
+            console.log(feedId);
             alert("피드작성 실패");
         })
     }
