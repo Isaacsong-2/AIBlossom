@@ -6,6 +6,8 @@ import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.PasswordRequestDto;
 import com.aiblossom.dto.*;
 import com.aiblossom.entity.UserRoleEnum;
+import com.aiblossom.service.EmailService;
+import com.aiblossom.service.EmailServiceImpl;
 import com.aiblossom.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final EmailServiceImpl emailService;
 
     @GetMapping("/user/signup")
     public String viewSignup(){
@@ -77,5 +80,15 @@ public class UserController {
     @ResponseBody
     public ApiResult updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ProfileRequestDto requestDto) {
         return userService.updateProfile(userDetails, requestDto);
+    }
+
+    // 이메일 인증
+    @PostMapping("/user/emailConfirm")
+
+    public String emailConfirm(@RequestParam String email) throws Exception {
+
+        String confirm = emailService.sendSimpleMessage(email);
+
+        return confirm;
     }
 }
