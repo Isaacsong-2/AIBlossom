@@ -18,7 +18,6 @@ function getToken() {
     if (auth === undefined) {
         return '';
     }
-
     return auth;
 }
 
@@ -120,6 +119,7 @@ function loadFeeds() {
                             <div class="description">
                                 <p>${feed.content}</p>
                             </div>
+                            <div> <p> 좋아요 개수: ${feed.heartNum}</p></div>
                         </a>
                         <div class="subInfo">
                             <span> ${feed.modifiedAt} </span>

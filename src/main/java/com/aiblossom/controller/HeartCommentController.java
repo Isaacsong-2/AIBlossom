@@ -20,8 +20,8 @@ public class HeartCommentController {
         return heartCommentService.onClickCommentHeart(userDetails, commentId);
     }
 
-    @DeleteMapping("/heart-comment/{heartCommentId}")
-    public ApiResult deleteCommentHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long heartCommentId){
-        return heartCommentService.deleteCommentHeart(userDetails, heartCommentId);
+    @DeleteMapping("/heart-comment/{commentId}")
+    public ApiResult deleteCommentHeart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId){
+        return heartCommentService.deleteCommentHeart(userDetails, commentId);
     }
 }
