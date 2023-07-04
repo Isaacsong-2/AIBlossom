@@ -1,0 +1,93 @@
+html, body {
+    height: 100%;
+}
+
+#profile {
+    width: 20%;
+    height: 100%;
+    background-color: antiquewhite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left;
+}
+
+#profile button {
+    width: 200px;
+    height: 50px;
+    margin: 10px;
+    border: aliceblue;
+    outline: cyan;
+}
+
+#feeds {
+    width: 80%;
+    /*background-color: blueviolet;*/
+    display: flex;
+    margin-top: 2rem;
+
+}
+
+.feedList {
+    flex: 1 1 0%;
+}
+
+.card {
+    display: flex;
+    margin: -1rem;
+    flex-wrap: wrap;
+}
+
+.feedHref{
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+.image{
+    padding-top: 52.1921%;
+    width: 100%;
+    position: relative;
+}
+.feed {
+    width: 20rem;
+    background: beige;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 4px 16px 0px;
+    transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
+    margin: 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.feedContent{
+    padding: 1rem;
+    display: flex;
+    flex: 1 1 0%;
+    flex-direction: column;
+}
+
+.description{
+    flex: 1 1 0%;
+}
+
+.subInfo{
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: grey;
+}
+.feedUser{
+    padding: 0.625rem 1rem;
+    border-top: 1px solid gainsboro;
+    display: flex;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+.userInfo{
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}

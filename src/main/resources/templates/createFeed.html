@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>피드 등록</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+</head>
+<body>
+<h1>피드 등록</h1>
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for ="title">제목</label>
+                <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for ="title">내용</label>
+                <textarea class="form-control" id="content" placeholder="내용을 입력하세요"></textarea>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary"  onclick="window.location.href='http://localhost:8080'">취소</button>
+        <button type="button" class="btn btn-primary" id="btn-save" onclick="create()">등록</button>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    let host = "http://localhost:8080"
+    $(document).ready(function () {
+        const auth = getToken();
+        if (auth !== undefined && auth !== '') {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader('Authorization', auth);
+            });
+        }
+    })
+    function getToken() {
+        let auth = Cookies.get('Authorization');
+        if (auth === undefined) {
+            return '';
+        }
+
+        return auth;
+    }
+
+    function create(){
+        let title = $('#title').val();
+        let content = $('#content').val();
+        $.ajax({
+            type: "POST",
+            url: `/blossom/feed`,
+            contentType: "application/json",
+            data: JSON.stringify({title: title, content: content}),
+        }).done(function () {
+            window.location.href = host
+            alert("피드작성 완료")
+        }).fail(function () {
+            alert("피드작성 실패");
+        })
+    }
+</script>
+</html>

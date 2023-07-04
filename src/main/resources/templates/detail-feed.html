@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${feed.title}"></title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+</head>
+
+<body>
+<div class="feed">
+    <div class="image">
+        <img src="">
+    </div>
+    <div class="feedContent">
+        <h4 th:text="${feed.title}"></h4>
+        <div class="description">
+            <p th:text="${feed.content}"></p>
+        </div>
+        <div class="subInfo">
+            <span th:text="${feed.modifiedAt}"> </span>
+            <span class="seperator"></span>
+        </div>
+    </div>
+    <div class="feedUser">
+        <span>
+            <b th:text="${feed.username}"></b>
+        </span>
+    </div>
+    <div>
+        <button onclick="modifyFeed()"> 수정</button>
+        <button id="btn-delete" onclick="deleteFeed()">삭제</button>
+    </div>
+    <div id="form-commentInfo">
+        <div id="comment-count">댓글 <span id="count" th:text="${#lists.size(feed.commentList)}"></span></div>
+        <input id="comment-input" placeholder="댓글을 입력해 주세요.">
+        <button id="submit" onclick="comment()">등록</button>
+    </div>
+    <div id=comments>
+        <ul>
+            <li th:each="comment : ${feed.commentList}">
+                <div>
+                    <span th:text="${comment.content}"></span>
+                </div>
+                <span th:text="${comment.username}">&nbsp;&nbsp;</span>
+                <span th:text="${comment.modifiedAt}"></span>
+                <input id="comment-modify-input" placeholder="수정하실 댓글내용을 입력해 주세요.">
+                <button id="modify-btn" th:comment="${comment.id}"
+                        th:onclick="modifyComment(this.getAttribute('comment'))">수정
+                </button>
+                <button id="delete-btn" th:comment="${comment.id}"
+                        th:onclick="deleteComment(this.getAttribute('comment'))">삭제</button>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    let host = "http://localhost:8080"
+    $(document).ready(function () {
+        const auth = getToken();
+        if (auth !== undefined && auth !== '') {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader('Authorization', auth);
+            });
+        }
+    })
+
+    function getToken() {
+        let auth = Cookies.get('Authorization');
+        if (auth === undefined) {
+            return '';
+        }
+
+        return auth;
+    }
+
+    /*<![CDATA[*/
+    function comment() {
+        let feedId = [[${feed.id}]];
+        let content = $('#comment-input').val();
+        $.ajax({
+            type: "POST",
+            url: `/blossom/comment`,
+            contentType: "application/json",
+            data: JSON.stringify({feedId: feedId, content: content}),
+        }).done(function () {
+            window.location.href = host + "/blossom/feed/" + feedId
+        }).fail(function () {
+            alert("피드작성 실패");
+        })
+    }
+
+    /*]]>*/
+    /*<![CDATA[*/
+    function modifyFeed() {
+        let feedId = [[${feed.id}]]
+        window.location.href = host + "/blossom/feed/manage/" + feedId
+    }
+
+    /*]]>*/
+    /*<![CDATA[*/
+    function deleteFeed() {
+        let feedId = [[${feed.id}]];
+        $.ajax({
+            type: "DELETE",
+            url: `/blossom/feed/` + feedId,
+            contentType: "application/json",
+        }).done(function () {
+            alert("삭제 완료")
+            window.location.href = host;
+        }).fail(function () {
+            alert("피드수정 실패");
+        })
+    }
+
+    /*]]>*/
+
+    /*<![CDATA[*/
+    function modifyComment(id) {
+        let feedId = [[${feed.id}]];
+        let content = $('#comment-modify-input').val();
+        $.ajax({
+            type: "PUT",
+            url: `/blossom/comment/` + id,
+            contentType: "application/json",
+            data: JSON.stringify({feedId: feedId, content: content}),
+        }).done(function () {
+            alert("댓글수정 성공");
+            window.location.href = host + "/blossom/feed/" + feedId
+        }).fail(function () {
+            alert("댓글수정 실패");
+        })
+    }
+    /*]]>*/
+    /*<![CDATA[*/
+    function deleteComment(id) {
+        let feedId = [[${feed.id}]];
+        $.ajax({
+            type: "DELETE",
+            url: `/blossom/comment/` + id,
+            contentType: "application/json",
+        }).done(function () {
+            alert("댓글삭제 성공");
+            window.location.href = host + "/blossom/feed/" + feedId
+        }).fail(function () {
+            alert("댓글삭제 실패");
+        })
+    }
+    /*]]>*/
+</script>
+</html>
