@@ -1,7 +1,6 @@
 package com.aiblossom.controller;
 
 import com.aiblossom.common.dto.ApiResult;
-import com.aiblossom.common.jwt.JwtUtil;
 import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.*;
 import com.aiblossom.entity.UserRoleEnum;
@@ -10,12 +9,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,7 +26,6 @@ import java.util.List;
 @RequestMapping("/blossom")
 public class UserController {
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
     @GetMapping("/user/signup")
     public String viewSignup(){
@@ -81,9 +81,11 @@ public class UserController {
         return userService.checkPassword(userDetails, requestDto);
     }
 
-    @PutMapping("/user/profile")
+    @PutMapping(value="/user/profile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public ApiResult updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ProfileRequestDto requestDto) {
-        return userService.updateProfile(userDetails, requestDto);
+    public ApiResult updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                   @RequestPart("json") ProfileRequestDto requestDto,
+                                   @RequestParam("image") MultipartFile image) {
+        return userService.updateProfile(userDetails, requestDto, image);
     }
 }

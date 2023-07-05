@@ -26,6 +26,9 @@ public class User {
     private String email;
 
     @Column
+    private String imageUrl;
+
+    @Column
     private String introduction;
 
     @Column(nullable = false)
@@ -43,6 +46,7 @@ public class User {
     public void update(ProfileRequestDto requestDto) {
         this.username = requestDto.getUsername();
         this.password = requestDto.getPassword();
+        this.imageUrl = requestDto.getImageUrl();
         this.introduction = requestDto.getIntroduction();
     }
 }
