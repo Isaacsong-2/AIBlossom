@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ public class Feed extends TimeStamped{
     private String title;
     @Column(nullable = false)
     private String content;
+    @Column
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -32,14 +35,16 @@ public class Feed extends TimeStamped{
     private List<HeartFeed> heartFeedList = new ArrayList<>();
 
     @Builder
-    public Feed(String title, String content, User user){
+    public Feed(String title, String content, User user, String imageUrl){
         this.title = title;
         this.content = content;
         this.user = user;
+        this.imageUrl = imageUrl;
     }
 
     public void update(FeedRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+        this.imageUrl = requestDto.getImageUrl();
     }
 }

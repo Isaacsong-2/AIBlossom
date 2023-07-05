@@ -9,11 +9,12 @@ import lombok.Setter;
 public class FeedRequestDto {
     private String title;
     private String content;
+    private String imageUrl;
 
-    @Builder
-    public FeedRequestDto(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
+//    @Builder
+//    public FeedRequestDto(String title, String content){
+//        this.title = title;
+//        this.content = content;
+//    }
 
 }

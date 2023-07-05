@@ -17,6 +17,7 @@ public class FeedResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private int heartNum;
+    private String imageUrl;
 
     private List<CommentResponseDto> commentList;
     public FeedResponseDto(Feed feed) {
@@ -31,5 +32,6 @@ public class FeedResponseDto {
                 .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
                 .collect(Collectors.toList());
         this.heartNum = feed.getHeartFeedList().size();
+        this.imageUrl = feed.getImageUrl();
     }
 }

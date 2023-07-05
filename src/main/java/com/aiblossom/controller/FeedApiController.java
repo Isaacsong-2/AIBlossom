@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,9 +24,16 @@ public class FeedApiController {
 
     @PostMapping("/feed")
     @ResponseBody
-    public ResponseEntity<?> save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody FeedRequestDto requestDto) {
+    public ResponseEntity<?> save(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                  @RequestParam(value = "image", required = false) MultipartFile image,
+                                  @RequestParam(value = "title") String title,
+                                  @RequestParam(value = "content") String content) {
+        FeedRequestDto requestDto = new FeedRequestDto();
+        requestDto.setTitle(title);
+        requestDto.setContent(content);
+
         checkToken(userDetails);
-        return ResponseEntity.ok(feedService.save(userDetails, requestDto));
+        return ResponseEntity.ok(feedService.save(userDetails, requestDto, image));
     }
 
     @GetMapping("/feed/manage")
@@ -55,9 +63,16 @@ public class FeedApiController {
 
     @PutMapping("/feed/{id}")
     @ResponseBody
-    public ResponseEntity<?> update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody FeedRequestDto requestDto) {
+    public ResponseEntity<?> update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id,
+                                    @RequestParam(value = "image", required = false) MultipartFile image,
+                                    @RequestParam(value = "title") String title,
+                                    @RequestParam(value = "content") String content) {
+        FeedRequestDto requestDto = new FeedRequestDto();
+        requestDto.setTitle(title);
+        requestDto.setContent(content);
+
         checkToken(userDetails);
-        return ResponseEntity.ok(feedService.update(userDetails, id, requestDto));
+        return ResponseEntity.ok(feedService.update(userDetails, id, requestDto, image));
     }
 
     @DeleteMapping("/feed/{id}")
