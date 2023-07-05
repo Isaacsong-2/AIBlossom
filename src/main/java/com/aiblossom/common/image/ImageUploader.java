@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -28,7 +29,6 @@ public class ImageUploader {
 
         String fileName = name + "/" + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
-
         uploadFile.delete();    // 로컬에 생성된 File 삭제 (MultipartFile -> File 전환 하며 로컬에 파일 생성됨)
 
         return uploadImageUrl;      // 업로드된 파일의 S3 URL 주소 반환
@@ -43,11 +43,12 @@ public class ImageUploader {
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
+        File convertFile = new File(UUID.randomUUID().toString());
         if (convertFile.createNewFile()) {
-            FileOutputStream fos = new FileOutputStream(convertFile);
-            fos.write(file.getBytes());
-            return Optional.of(convertFile);
+            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+                fos.write(file.getBytes());
+                return Optional.of(convertFile);
+            }
         }
         return Optional.empty();
     }

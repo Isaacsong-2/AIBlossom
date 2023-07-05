@@ -65,8 +65,9 @@ public class UserController {
         String username = userDetails.getUser().getUsername();
         String introduction = userDetails.getUser().getIntroduction();
         UserRoleEnum role = userDetails.getUser().getRole();
+        String imageUrl = userDetails.getUser().getImageUrl();
         boolean isAdmin = (role == UserRoleEnum.ADMIN);
-        return new UserInfoDto(username, introduction, isAdmin);
+        return new UserInfoDto(username, introduction, isAdmin, imageUrl);
     }
 
     @GetMapping("/user/profile/manage")
@@ -86,11 +87,11 @@ public class UserController {
         return new PasswordResponseDto(userService.checkPassword(userDetails, requestDto));
     }
 
-    @PutMapping(value="/user/profile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value= "/user/profile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ApiResult updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                    @RequestPart("json") ProfileRequestDto requestDto,
-                                   @RequestParam("image") MultipartFile image) {
+                                   @RequestParam(value = "image", required = false) MultipartFile image) {
         return userService.updateProfile(userDetails, requestDto, image);
     }
 }

@@ -9,4 +9,5 @@ public class UserInfoDto {
     String username;
     String introduction;
     boolean isAdmin;
+    String imageUrl;
 }

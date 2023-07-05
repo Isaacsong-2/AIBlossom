@@ -75,13 +75,14 @@ public class UserService {
         User targetUser = userRepository.findById(user.getId()).orElseThrow(() ->
                 new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null));
 
-        try {
-            String imageUrl = imageUploader.upload(image, "image");
-            System.out.println("imageUrl = " + imageUrl);
-
-            requestDto.setImageUrl(imageUrl);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (image != null) {
+            try {
+                String imageUrl = imageUploader.upload(image, "image");
+                System.out.println("imageUrl = " + imageUrl);
+                requestDto.setImageUrl(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         targetUser.update(requestDto);
