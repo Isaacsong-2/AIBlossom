@@ -87,11 +87,18 @@ public class UserController {
         return new PasswordResponseDto(userService.checkPassword(userDetails, requestDto));
     }
 
-    @PutMapping(value= "/user/profile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/user/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ApiResult updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                   @RequestPart("json") ProfileRequestDto requestDto,
-                                   @RequestParam(value = "image", required = false) MultipartFile image) {
+                                   @RequestParam(value = "image", required = false) MultipartFile image,
+                                   @RequestParam(value = "username") String username,
+                                   @RequestParam(value = "password") String password,
+                                   @RequestParam(value = "introduction") String introduction) {
+        ProfileRequestDto requestDto = new ProfileRequestDto();
+        requestDto.setUsername(username);
+        requestDto.setPassword(password);
+        requestDto.setIntroduction(introduction);
+
         return userService.updateProfile(userDetails, requestDto, image);
     }
 }

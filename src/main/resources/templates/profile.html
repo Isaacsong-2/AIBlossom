@@ -16,6 +16,10 @@
     <button onclick="checkPassword()">비밀번호 확인</button>
 </div>
 <div class="col-md-12" id="modifyForm" style="display: none">
+    <div>
+        <label for="file1">이미지</label>
+        <input type="file" id="file1" name="file1">
+    </div>
     <div class="col-md-4">
         <form>
             <div class="form-group">
@@ -38,6 +42,7 @@
 </body>
 <script>
     let isCorrectPassword = false;
+    let sel_file;
     let host = "http://localhost:8080"
     $(document).ready(function () {
         const auth = getToken();
@@ -46,6 +51,7 @@
                 jqXHR.setRequestHeader('Authorization', auth);
             });
         }
+        $("#file1").on("change", handleImgFileSelect);
     })
 
     function getToken() {
@@ -78,19 +84,47 @@
         window.location.href = host
     }
 
+    function handleImgFileSelect(e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+
+        var reg = /(.*?)\/(jpg|jpeg|png|bmp)$/;
+
+        filesArr.forEach(function(f) {
+            if (!f.type.match(reg)) {
+                alert("확장자는 이미지 확장자만 가능합니다.");
+                return;
+            }
+
+            sel_file = f;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $("#img").attr("src", e.target.result);
+            }
+            reader.readAsDataURL(f);
+        });
+    }
+
     function modify(){
         let username = $('#username').val();
         let password = $('#modifyPassword').val();
         let introduction = $('#introduction').val();
+        let imageInput = document.getElementById('file1');
+        let image = imageInput.files[0];
+        let formData = new FormData();
+        formData.append("username", username);
+        formData.append("password", password);
+        formData.append("introduction", introduction);
+        if (image !== 'undefined') {
+            formData.append("image", image)
+        }
         $.ajax({
             type: "PUT",
             url: `/blossom/user/profile`,
-            contentType: "application/json",
-            data: JSON.stringify({
-                username: username,
-                password: password,
-                introduction: introduction
-            }),
+            data: formData,
+            processData: false,
+            contentType: false
         }).done(function () {
             alert("프로필이 변경되었습니다.")
             back()
