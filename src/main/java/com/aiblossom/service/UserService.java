@@ -47,13 +47,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void checkMail(EmailAuthRequestDto requestDto) {
-        String authCode = sendMail(requestDto.getEmail());
-
-        if (!authCode.equals(requestDto.getAuthCode())) {
-            throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
-        }
-    }
 
     @Transactional(readOnly = true)
     public ProfileResponseDto getProfile(UserDetailsImpl userDetails) {
@@ -83,7 +76,7 @@ public class UserService {
         return new ApiResult("정보 수정 완료", HttpStatus.OK.value());
     }
 
-    private String sendMail(String email){
+    public String sendMail(String email){
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         String authCode = createCode();
         try {

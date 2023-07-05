@@ -49,10 +49,9 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/user/email-auth")
-    public ResponseEntity<String> emailCheck(@RequestBody EmailAuthRequestDto requestDto){
+    public String sendMail(@RequestBody EmailAuthRequestDto requestDto){
 
-        userService.checkMail(requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body("이메일 인증 성공");
+        return  userService.sendMail(requestDto.getEmail());
     }
 
     @GetMapping("/user/login")

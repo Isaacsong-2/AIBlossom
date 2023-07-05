@@ -6,5 +6,4 @@ import lombok.Getter;
 public class EmailAuthRequestDto {
 
     private String email;
-    private String authCode;
 }
