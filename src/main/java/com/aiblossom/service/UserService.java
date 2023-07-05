@@ -3,7 +3,7 @@ package com.aiblossom.service;
 import com.aiblossom.common.Exception.HanghaeBlogErrorCode;
 import com.aiblossom.common.Exception.HanghaeBlogException;
 import com.aiblossom.common.dto.ApiResult;
-import com.aiblossom.common.jwt.JwtUtil;
+import com.aiblossom.common.image.ImageUploader;
 import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.*;
 import com.aiblossom.entity.User;
@@ -19,7 +19,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Random;
 
 @Slf4j
@@ -29,7 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
-    private final JwtUtil jwtUtil;
+    private final ImageUploader imageUploader;
 
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
@@ -67,14 +69,28 @@ public class UserService {
     }
 
     @Transactional
-    public ApiResult updateProfile(UserDetailsImpl userDetails, ProfileRequestDto requestDto) {
+    public ApiResult updateProfile(UserDetailsImpl userDetails, ProfileRequestDto requestDto, MultipartFile image) {
         User user = userDetails.getUser(); // 로그인 된 유저에 맞는 정보 담기
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User targetUser = userRepository.findById(user.getId()).orElseThrow(() ->
                 new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null));
+
+        if (image != null) {
+            try {
+                String imageUrl = imageUploader.upload(image, "image");
+                System.out.println("imageUrl = " + imageUrl);
+                requestDto.setImageUrl(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         targetUser.update(requestDto);
+
         return new ApiResult("정보 수정 완료", HttpStatus.OK.value());
     }
+
+
 
     public String sendMail(String email){
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
