@@ -23,6 +23,9 @@ public class User {
     private String password;
 
     @Column
+    private String email;
+
+    @Column
     private String introduction;
 
     @Column(nullable = false)
@@ -30,9 +33,10 @@ public class User {
     private UserRoleEnum role;
 
     @Builder
-    public User(String username, String password, UserRoleEnum role) {
+    public User(String username, String password, String email, UserRoleEnum role) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
     }
 
