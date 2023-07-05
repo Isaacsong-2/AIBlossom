@@ -29,7 +29,7 @@ public class Comment extends TimeStamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<HeartComment> heartCommentList = new ArrayList<>();
 
     @Builder

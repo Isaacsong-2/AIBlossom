@@ -28,16 +28,15 @@ public class HeartFeedService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public FeedResponseDto onClickFeedkHeart(UserDetailsImpl userDetails, Long postId) {
+    public FeedResponseDto onClickFeedHeart(UserDetailsImpl userDetails, Long feedId) {
         // 토큰 체크
         User user = userDetails.getUser();
 
         if (user == null) {
             throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null);
         }
-
         // 좋아요 누른 게시글 find
-        Feed feed = postRepository.findById(postId)
+        Feed feed = postRepository.findById(feedId)
                 .orElseThrow(() -> new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_POST, null));
 
         // 좋아요누른게시글이 로그인사용자 본인게시글이면 좋아요 불가능
@@ -46,12 +45,9 @@ public class HeartFeedService {
         }
 
         // 중복 좋아요 방지
-        List<HeartFeed> heartFeedList = heartFeedRepository.findAll();
-        for (HeartFeed heartFeeds : heartFeedList) {
-            if (feed.getId().equals(heartFeeds.getFeed().getId())
-                    && user.getId().equals(heartFeeds.getUser().getId())) {
-                throw new HanghaeBlogException(HanghaeBlogErrorCode.OVERLAP_HEART, null);
-            }
+        HeartFeed heartFeed = heartFeedRepository.findByFeed_IdAndUser_Id(feedId, user.getId());
+        if (heartFeed != null){
+            throw new HanghaeBlogException(HanghaeBlogErrorCode.OVERLAP_HEART, null);
         }
 
         // HeartFeedRepository DB저장
@@ -61,7 +57,7 @@ public class HeartFeedService {
     }
 
     @Transactional
-    public ApiResult deleteFeedHeart(UserDetailsImpl userDetails, Long heartFeedId) {
+    public ApiResult deleteFeedHeart(UserDetailsImpl userDetails, Long feedId) {
         // 토큰 체크
         User user = userDetails.getUser();
 
@@ -70,9 +66,10 @@ public class HeartFeedService {
         }
 
         // HeartFeed entity find
-        HeartFeed heartFeed = heartFeedRepository.findById(heartFeedId).orElseThrow(
-                () -> new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_HEART, null)
-        );
+        HeartFeed heartFeed = heartFeedRepository.findByFeed_IdAndUser_Id(feedId, user.getId());
+        if (heartFeed == null){
+            throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_HEART, null);
+        }
 
         // 좋아요 누른 본인이거나 admin일경우만 삭제가능하도록 체크
         if (this.checkValidUser(user, heartFeed)) {

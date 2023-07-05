@@ -48,14 +48,11 @@ public class HeartCommentService {
         }
 
         // 중복 좋아요 방지
-        List<Comment> commentList = commentRepository.findAll();
-        for (Comment comments : commentList) {
-            if (comments.getId().equals(comment.getId())
-                    && comments.getUser().getId().equals(user.getId())) {
-                throw new IllegalArgumentException("한 댓글에 좋아요는 한 번만 가능합니다.");
-            }
-        }
+        HeartComment heartComment = heartCommentRepository.findByComment_IdAndUser_Id(comment.getId(), user.getId());
 
+        if (heartComment != null){
+            throw new HanghaeBlogException(HanghaeBlogErrorCode.OVERLAP_HEART, null);
+        }
         // HeartCommentRepository DB저장
         heartCommentRepository.save(new HeartComment(comment, user));
 
@@ -63,7 +60,7 @@ public class HeartCommentService {
         return new CommentResponseDto(comment);
     }
 
-    public ApiResult deleteCommentHeart(UserDetailsImpl userDetails, Long heartCommentId) {
+    public ApiResult deleteCommentHeart(UserDetailsImpl userDetails, Long commentId) {
         // 토큰 체크
         User user = userDetails.getUser();
 
@@ -72,9 +69,10 @@ public class HeartCommentService {
         }
 
         // HeartComment entity find
-        HeartComment heartComment = heartCommentRepository.findById(heartCommentId).orElseThrow(
-                () -> new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_HEART, null)
-        );
+        HeartComment heartComment = heartCommentRepository.findByComment_IdAndUser_Id(commentId, user.getId());
+        if (heartComment == null){
+            throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_HEART, null);
+        }
 
         // 좋아요 누른 본인이거나 admin일경우만 삭제가능하도록 체크
         if (this.checkValidUser(user, heartComment)) {

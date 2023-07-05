@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title th:text="${feed.title}"></title>
@@ -16,7 +16,7 @@
         <img src="">
     </div>
     <div class="feedContent">
-        <h4 th:text="${feed.title}"></h4>
+        <h2 th:text="${feed.title}"></h2>
         <div class="description">
             <p th:text="${feed.content}"></p>
         </div>
@@ -30,12 +30,21 @@
             <b th:text="${feed.username}"></b>
         </span>
     </div>
-    <div>
+    <div style="display: flex">
         <button onclick="modifyFeed()"> 수정</button>
         <button id="btn-delete" onclick="deleteFeed()">삭제</button>
     </div>
+    <br>
+    <div>
+        <span>피드 좋아요 개수:  </span>
+        <span th:text="${feed.heartNum}"></span>
+        <button onclick="feedLike()">좋아요</button>
+        <button onclick="feedDislike()">좋아요 취소</button>
+
+    </div>
+    <br>
     <div id="form-commentInfo">
-        <div id="comment-count">댓글 <span id="count" th:text="${#lists.size(feed.commentList)}"></span></div>
+        <div id="comment-count">댓글수:  <span id="count" th:text="${#lists.size(feed.commentList)}"></span></div>
         <input id="comment-input" placeholder="댓글을 입력해 주세요.">
         <button id="submit" onclick="comment()">등록</button>
     </div>
@@ -53,6 +62,11 @@
                 </button>
                 <button id="delete-btn" th:comment="${comment.id}"
                         th:onclick="deleteComment(this.getAttribute('comment'))">삭제</button>
+                <br>
+                <span>댓글 좋아요 개수:  </span>
+                <span th:text="${comment.heartNum}"></span>
+                <button th:comment="${comment.id}" th:onclick="commentLike(this.getAttribute('comment'))">좋아요</button>
+                <button th:comment="${comment.id}" th:onclick="commentDislike(this.getAttribute('comment'))">좋아요 취소</button>
             </li>
         </ul>
     </div>
@@ -90,6 +104,7 @@
         }).done(function () {
             window.location.href = host + "/blossom/feed/" + feedId
         }).fail(function () {
+            console.log(feedId);
             alert("피드작성 실패");
         })
     }
@@ -148,6 +163,64 @@
             window.location.href = host + "/blossom/feed/" + feedId
         }).fail(function () {
             alert("댓글삭제 실패");
+        })
+    }
+    /*]]>*/
+    /*<![CDATA[*/
+    function feedLike(){
+        let feedId = [[${feed.id}]];
+        $.ajax({
+            type: "POST",
+            url: `/blossom/heart-feed/` + feedId,
+            contentType: "application/json",
+        }).done(function () {
+            alert("피드 좋아요 성공");
+            window.location.href = host + "/blossom/feed/" + feedId
+        }).fail(function () {
+            alert("피드 좋아요 실패");
+        })
+    }
+    /*]]>*/
+    /*<![CDATA[*/
+    function feedDislike(){
+        let feedId = [[${feed.id}]];
+        $.ajax({
+            type: "DELETE",
+            url: `/blossom/heart-feed/` + feedId,
+            contentType: "application/json",
+        }).done(function () {
+            alert("피드 좋아요 취소 성공");
+            window.location.href = host + "/blossom/feed/" + feedId
+        }).fail(function () {
+            alert("피드 좋아요 취소 실패");
+        })
+    }
+    /*]]>*/
+    /*<![CDATA[*/
+    function commentLike(id){
+        $.ajax({
+            type: "POST",
+            url: `/blossom/heart-comment/` + id,
+            contentType: "application/json",
+        }).done(function () {
+            alert("댓글 좋아요 성공");
+            window.location.href = host + "/blossom/feed/" + [[${feed.id}]]
+        }).fail(function () {
+            alert("댓글 좋아요 실패");
+        })
+    }
+    /*]]>*/
+    /*<![CDATA[*/
+    function commentDislike(id){
+        $.ajax({
+            type: "DELETE",
+            url: `/blossom/heart-comment/` + id,
+            contentType: "application/json",
+        }).done(function () {
+            alert("댓글 좋아요 성공");
+            window.location.href = host + "/blossom/feed/" + [[${feed.id}]]
+        }).fail(function () {
+            alert("댓글 좋아요 실패");
         })
     }
     /*]]>*/

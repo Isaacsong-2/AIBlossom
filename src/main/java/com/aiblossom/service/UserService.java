@@ -49,13 +49,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void checkMail(EmailAuthRequestDto requestDto) {
-        String authCode = sendMail(requestDto.getEmail());
-
-        if (!authCode.equals(requestDto.getAuthCode())) {
-            throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
-        }
-    }
 
     @Transactional(readOnly = true)
     public ProfileResponseDto getProfile(UserDetailsImpl userDetails) {
@@ -65,13 +58,14 @@ public class UserService {
     }
 
     @Transactional
-    public ApiResult checkPassword(UserDetailsImpl userDetails, PasswordRequestDto requestDto) {
+    public boolean checkPassword(UserDetailsImpl userDetails, PasswordRequestDto requestDto) {
         User user = userDetails.getUser();
         // 비밀번호 확인
+        System.out.println(requestDto.getPassword());
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new HanghaeBlogException(HanghaeBlogErrorCode.WRONG_PASSWORD, null);
         }
-        return new ApiResult("프로필 수정으로 넘어가기", HttpStatus.OK.value()); // 수정 페이지로 넘어가기 전 비밀번호 확인
+        return true; // 수정 페이지로 넘어가기 전 비밀번호 확인
     }
 
     @Transactional
@@ -95,7 +89,9 @@ public class UserService {
         return new ApiResult("정보 수정 완료", HttpStatus.OK.value());
     }
 
-    private String sendMail(String email) {
+
+
+    public String sendMail(String email){
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         String authCode = createCode();
         try {
