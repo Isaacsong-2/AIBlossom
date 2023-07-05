@@ -48,18 +48,14 @@ function addProfile() {
             $('#profile').append(`
                 <div class="feed">
                     <div><span>프로필</span></div>
-                    <a class="feedHref" href="">
-                        <div class="image">
-                            <img src="">
-                        </div>
-                    </a>
+                    <div class="image">
+                        <img src="${response.imageUrl}">
+                    </div>
                      <div class="feedContent">
-                        <a class="feedHref" href="">
-                            <h4>${response.username}</h4>
-                            <div class="description">
-                                <p>${response.introduction}</p>
-                            </div>
-                        </a>
+                        <h4>${response.username}</h4>
+                        <div class="description">
+                            <p>${response.introduction}</p>
+                        </div>
                     </div>
                     <div>
                     <button onclick="createFeed()">피드 작성</button>
