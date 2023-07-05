@@ -20,6 +20,13 @@
 <div id="text">
     <input type="password" id="password" placeholder="Password">
 </div>
+<div id="text">
+    <input type="text" id="email" placeholder="Email">
+    <button onclick="sendEmail()"> 인증코드 보내기 </button>
+</div>
+<div id="text">
+    <input type="text" id="inputCode" placeholder="AuthCode">
+</div>
 <div>
     <button id="btn" onclick="signup()">회원가입</button>
 </div>
@@ -29,24 +36,43 @@
         // 토큰 삭제
         Cookies.remove('Authorization', {path: '/'});
     });
-
+    let code = "voqnioenqoweikn;aknds;boniak;oknqw;ekn;faoeoj19jt1983htpijghp9283hrp1ij24";
     const host = 'http://' + window.location.host;
+
+    function sendEmail(){
+        let email = $('#email').val();
+        $.ajax({
+            type: "POST",
+            url: `/blossom/user/email-auth`,
+            contentType: "application/json",
+            data: JSON.stringify({email: email}),
+        }).done(function (res){
+            console.log(res)
+            code = res;
+        }).fail(function (){
+            alert("이메일 전송 실패");
+        })
+    }
 
     function signup() {
         let username = $('#username').val();
         let password = $('#password').val();
-        console.log(username, password);
-        $.ajax({
-            type: "POST",
-            url: `/blossom/user/signup`,
-            contentType: "application/json",
-            data: JSON.stringify({username: username, password: password}),
-        }).done(function (){
-            window.location.href = host
-        }).fail(function (){
-            alert("회원가입 실패");
-            window.location.href = host
-        })
+        let email = $('#email').val();
+        let inputCode = $('#inputCode').val();
+        if (inputCode === code) {
+            console.log(username, password, email);
+            $.ajax({
+                type: "POST",
+                url: `/blossom/user/signup`,
+                contentType: "application/json",
+                data: JSON.stringify({username: username, password: password, email: email}),
+            }).done(function () {
+                window.location.href = host
+            }).fail(function () {
+                alert("회원가입 실패");
+                window.location.href = host
+            })
+        } else{ alert("인증코드가 일치하지 않습니다.") }
     }
 </script>
 </html>
