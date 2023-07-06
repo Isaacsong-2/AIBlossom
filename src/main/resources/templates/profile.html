@@ -156,7 +156,7 @@
             $("#passwordForm").hide();
             $("#modifyForm").show();
         }).fail(function () {
-            alert("비밀번호가 일치하지 않습니다")
+            alert(res.responseText);
         })
     }
 
@@ -208,8 +208,8 @@
         }).done(function () {
             alert("프로필이 변경되었습니다.")
             back()
-        }).fail(function () {
-            alert("프로필변경을 실패했습니다.")
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
 </script>

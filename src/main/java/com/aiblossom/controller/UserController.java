@@ -5,6 +5,7 @@ import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.*;
 import com.aiblossom.entity.UserRoleEnum;
 import com.aiblossom.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -49,7 +51,7 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/user/email-auth")
-    public String sendMail(@RequestBody EmailAuthRequestDto requestDto){
+    public String sendMail(@RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
 
         return  userService.sendMail(requestDto.getEmail());
     }
@@ -93,7 +95,7 @@ public class UserController {
                                    @RequestParam(value = "image", required = false) MultipartFile image,
                                    @RequestParam(value = "username") String username,
                                    @RequestParam(value = "password") String password,
-                                   @RequestParam(value = "introduction") String introduction) {
+                                   @RequestParam(value = "introduction") String introduction) throws IOException {
         ProfileRequestDto requestDto = new ProfileRequestDto();
         requestDto.setUsername(username);
         requestDto.setPassword(password);

@@ -1,7 +1,7 @@
 package com.aiblossom.service;
 
-import com.aiblossom.common.Exception.HanghaeBlogErrorCode;
-import com.aiblossom.common.Exception.HanghaeBlogException;
+import com.aiblossom.common.Exception.BlossomErrorCode;
+import com.aiblossom.common.Exception.BlossomException;
 import com.aiblossom.common.constant.ProjConst;
 import com.aiblossom.common.dto.ApiResult;
 import com.aiblossom.common.jwt.JwtUtil;
@@ -12,13 +12,10 @@ import com.aiblossom.entity.HeartComment;
 import com.aiblossom.entity.User;
 import com.aiblossom.repository.CommentRepository;
 import com.aiblossom.repository.HeartCommentRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,37 +23,29 @@ public class HeartCommentService {
 
     private final HeartCommentRepository heartCommentRepository;
     private final CommentRepository commentRepository;
-    private final JwtUtil jwtUtil;
 
     @Transactional
     public CommentResponseDto onClickCommentHeart(UserDetailsImpl userDetails, Long commentId) {
         // 토큰 체크
         User user = userDetails.getUser();
-
         if (user == null) {
-            throw new IllegalArgumentException("로그인 하세요");
+            throw new BlossomException(BlossomErrorCode.NOT_FOUND_USER, null);
         }
-
         // 좋아요 누른 댓글 find
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("댓글이 없습니다.")
+                () -> new BlossomException(BlossomErrorCode.NOT_FOUND_COMMENT, null)
         );
-
         // 좋아요 누른 댓글이 본인 댓글이면 좋아요 불가능
         if (user.getId().equals(comment.getUser().getId())) {
-            throw new IllegalArgumentException("본인이 작성한 댓글에는 좋아요가 불가능합니다.");
+            throw new BlossomException(BlossomErrorCode.CAN_NOT_MINE, null);
         }
-
         // 중복 좋아요 방지
         HeartComment heartComment = heartCommentRepository.findByComment_IdAndUser_Id(comment.getId(), user.getId());
-
         if (heartComment != null){
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.OVERLAP_HEART, null);
+            throw new BlossomException(BlossomErrorCode.OVERLAP_HEART, null);
         }
         // HeartCommentRepository DB저장
         heartCommentRepository.save(new HeartComment(comment, user));
-
-
         return new CommentResponseDto(comment);
     }
 
@@ -65,18 +54,18 @@ public class HeartCommentService {
         User user = userDetails.getUser();
 
         if (user == null) {
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null);
+            throw new BlossomException(BlossomErrorCode.NOT_FOUND_USER, null);
         }
 
         // HeartComment entity find
         HeartComment heartComment = heartCommentRepository.findByComment_IdAndUser_Id(commentId, user.getId());
         if (heartComment == null){
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_HEART, null);
+            throw new BlossomException(BlossomErrorCode.NOT_FOUND_HEART, null);
         }
 
         // 좋아요 누른 본인이거나 admin일경우만 삭제가능하도록 체크
         if (this.checkValidUser(user, heartComment)) {
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.UNAUTHORIZED_USER, null);
+            throw new BlossomException(BlossomErrorCode.UNAUTHORIZED_USER, null);
         }
 
         heartCommentRepository.delete(heartComment);
