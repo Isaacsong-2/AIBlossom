@@ -10,7 +10,6 @@ $(document).ready(function () {
         signupAndLogin();
     }
     loadFeeds();
-    // addReference();
 })
 
 function getToken() {
@@ -60,6 +59,7 @@ function addProfile() {
                     <div>
                     <button onclick="createFeed()">피드 작성</button>
                     <button onclick="modifyProfile()">프로필 수정</button>
+                    <button onclick="logout()">로그 아웃</button>
                     </div>
                 </div>
             `)
@@ -97,41 +97,44 @@ function loadFeeds() {
         }
     });
 
-    function addHTML(feed) {
-        /**
-         * class="search-itemDto" 인 녀석에서
-         * image, title, lprice, addProduct 활용하기
-         * 참고) onclick='addProduct(${JSON.stringify(itemDto)})'
-         */
-        return `<div class="feed">
-                    <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
-                        <div class="image">
-                            <img src="${feed.imageUrl}">
-                        </div>
-                    </a>
-                    <div class="feedContent">
-                        <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
-                            <h4>${feed.title}</h4>
-                            <div class="description">
-                                <p>${feed.content}</p>
-                            </div>
-                            <div> <p> 좋아요 개수: ${feed.heartNum}</p></div>
-                        </a>
-                        <div class="subInfo">
-                            <span> ${feed.modifiedAt} </span>
-                            <span class="seperator"></span>
-                        </div>
+function addHTML(feed) {
+    /**
+     * class="search-itemDto" 인 녀석에서
+     * image, title, lprice, addProduct 활용하기
+     * 참고) onclick='addProduct(${JSON.stringify(itemDto)})'
+     */
+    return `<div class="feed">
+                <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
+                    <div class="image">
+                        <img src="${feed.imageUrl}">
                     </div>
-                    <div class="feedUser">
-                        <a class="userInfo" href="">
-                            <span>
-                                "by "
-                                <b>${feed.username}</b>
-                            </span>
-                        </a>
+                </a>
+                <div class="feedContent">
+                    <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
+                        <h4>${feed.title}</h4>
+                        <div class="description">
+                            <p>${feed.content}</p>
+                        </div>
+                        <div> <p> 좋아요 개수: ${feed.heartNum}</p></div>
+                    </a>
+                    <div class="subInfo">
+                        <span> ${feed.modifiedAt} </span>
+                        <span class="seperator"></span>
                     </div>
                 </div>
-                `
-    }
-
+                <div class="feedUser">
+                    <a class="userInfo" href="">
+                        <span>
+                            "by "
+                            <b>${feed.username}</b>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            `
+}
+}
+function logout(){
+    Cookies.remove('Authorization', {path: '/'});
+    window.location.href = host;
 }
