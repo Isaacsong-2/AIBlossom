@@ -26,6 +26,16 @@
 <div>
     <button id="btn" onclick="location.href= host + '/blossom/user/signup'">회원가입</button>
 </div>
+
+<div>
+    <h2>소셜 로그인</h2>
+    <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">
+        Google Login
+    </a>
+    <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">
+        Naver Login
+    </a>
+</div>
 </body>
 <script>
     $(document).ready(function () {

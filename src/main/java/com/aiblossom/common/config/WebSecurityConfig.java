@@ -2,10 +2,12 @@ package com.aiblossom.common.config;
 
 
 import com.aiblossom.common.jwt.JwtUtil;
+import com.aiblossom.common.oauth2.CustomOAuth2UserService;
 import com.aiblossom.common.security.AuthenticationSuccessHandlerImpl;
 import com.aiblossom.common.security.JwtAuthenticationFilter;
 import com.aiblossom.common.security.JwtAuthorizationFilter;
 import com.aiblossom.common.security.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
@@ -26,12 +29,8 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-        this.authenticationConfiguration = authenticationConfiguration;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -72,7 +71,7 @@ public class WebSecurityConfig {
 //                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
                         .anyRequest().permitAll()
         );
-
+        http.oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

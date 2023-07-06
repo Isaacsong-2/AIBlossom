@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,7 +22,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column
@@ -39,6 +40,14 @@ public class User {
 
 
     @Builder
+    public User(String username, String password,String imageUrl, String email, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.imageUrl = imageUrl;
+        this.email = email;
+        this.role = role;
+    }
+
     public User(String username, String password, String email, UserRoleEnum role) {
         this.username = username;
         this.password = password;
@@ -51,5 +60,11 @@ public class User {
         this.password = requestDto.getPassword();
         this.imageUrl = requestDto.getImageUrl();
         this.introduction = requestDto.getIntroduction();
+    }
+
+    public User update(String name, String profileImageUrl) {
+        this.username = name;
+        this.imageUrl = profileImageUrl;
+        return this;
     }
 }

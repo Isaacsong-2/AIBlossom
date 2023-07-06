@@ -121,4 +121,8 @@ public class UserService {
         }
         return key.toString();
     }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow();
+    }
 }
