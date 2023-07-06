@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -35,6 +38,13 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @OneToMany(mappedBy = "followingUser")
+    private List<Follow> followingList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followerUser")
+    private List<Follow> followerList = new ArrayList<>();
+
+
     @Builder
     public User(String username, String password, String email, UserRoleEnum role) {
         this.username = username;
@@ -50,3 +60,4 @@ public class User {
         this.introduction = requestDto.getIntroduction();
     }
 }
+
