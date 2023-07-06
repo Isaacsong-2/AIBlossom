@@ -6,22 +6,23 @@ import com.aiblossom.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/follow")
+@RequestMapping("/blossom/follow")
 public class FollowController {
 
     private final FollowService followService;
 
-    @PostMapping("/{userId}")
-    public void following(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long userId) {
-        followService.following(userDetails,userId);
+    @PostMapping("/{id}")
+    public void following(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        followService.following(userDetails, id);
+    }
 
+    @DeleteMapping("/{id}")
+    public void unfollowing(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        followService.unfollowing(userDetails, id);
     }
 }
