@@ -158,13 +158,14 @@
         $.ajax({
             type: "POST",
             url: `/blossom/feed`,
-            contentType: "application/json",
-            data: JSON.stringify({title: title, content: content}),
+            data: formData,
+            processData: false,
+            contentType: false
         }).done(function () {
-            window.location.href = host
-            alert("피드작성 완료")
+            alert("피드 작성 완료")
+            window.location.href=host
         }).fail(function (res) {
-            alert(res);
+            alert(res.responseText);
         })
     }
 </script>

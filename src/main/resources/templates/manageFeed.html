@@ -154,12 +154,13 @@
         }
         $.ajax({
             type: "PUT",
-            url: `/blossom/feed/`+feedId,
-            contentType: "application/json",
-            data: JSON.stringify({title: title, content: content}),
+            url: `/blossom/feed/` + feedId,
+            data: formData,
+            processData: false,
+            contentType: false
         }).done(function () {
-            alert("수정 완료");
-            window.location.href = host + "/blossom/feed/" + feedId
+            alert("피드 수정 완료")
+            window.location.href=host
         }).fail(function (res) {
             alert(res.responseText);
         })

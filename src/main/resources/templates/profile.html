@@ -155,7 +155,7 @@
         }).done(function () {
             $("#passwordForm").hide();
             $("#modifyForm").show();
-        }).fail(function () {
+        }).fail(function (res) {
             alert(res.responseText);
         })
     }
