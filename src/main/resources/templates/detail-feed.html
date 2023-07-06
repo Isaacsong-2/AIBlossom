@@ -103,9 +103,8 @@
             data: JSON.stringify({feedId: feedId, content: content}),
         }).done(function () {
             window.location.href = host + "/blossom/feed/" + feedId
-        }).fail(function () {
-            console.log(feedId);
-            alert("피드작성 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
 
@@ -127,8 +126,8 @@
         }).done(function () {
             alert("삭제 완료")
             window.location.href = host;
-        }).fail(function () {
-            alert("피드수정 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
 
@@ -146,8 +145,8 @@
         }).done(function () {
             alert("댓글수정 성공");
             window.location.href = host + "/blossom/feed/" + feedId
-        }).fail(function () {
-            alert("댓글수정 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
     /*]]>*/
@@ -161,8 +160,8 @@
         }).done(function () {
             alert("댓글삭제 성공");
             window.location.href = host + "/blossom/feed/" + feedId
-        }).fail(function () {
-            alert("댓글삭제 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
     /*]]>*/
@@ -176,8 +175,8 @@
         }).done(function () {
             alert("피드 좋아요 성공");
             window.location.href = host + "/blossom/feed/" + feedId
-        }).fail(function () {
-            alert("피드 좋아요 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
     /*]]>*/
@@ -191,8 +190,8 @@
         }).done(function () {
             alert("피드 좋아요 취소 성공");
             window.location.href = host + "/blossom/feed/" + feedId
-        }).fail(function () {
-            alert("피드 좋아요 취소 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
     /*]]>*/
@@ -205,8 +204,8 @@
         }).done(function () {
             alert("댓글 좋아요 성공");
             window.location.href = host + "/blossom/feed/" + [[${feed.id}]]
-        }).fail(function () {
-            alert("댓글 좋아요 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
     /*]]>*/
@@ -219,8 +218,8 @@
         }).done(function () {
             alert("댓글 좋아요 성공");
             window.location.href = host + "/blossom/feed/" + [[${feed.id}]]
-        }).fail(function () {
-            alert("댓글 좋아요 실패");
+        }).fail(function (res) {
+            alert(res.responseText);
         })
     }
     /*]]>*/

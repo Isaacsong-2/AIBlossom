@@ -1,5 +1,7 @@
 package com.aiblossom.controller;
 
+import com.aiblossom.common.Exception.BlossomErrorCode;
+import com.aiblossom.common.Exception.BlossomException;
 import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.FeedRequestDto;
 import com.aiblossom.dto.FeedResponseDto;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -27,7 +30,7 @@ public class FeedApiController {
     public ResponseEntity<?> save(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                   @RequestParam(value = "image", required = false) MultipartFile image,
                                   @RequestParam(value = "title") String title,
-                                  @RequestParam(value = "content") String content) {
+                                  @RequestParam(value = "content") String content) throws IOException {
         FeedRequestDto requestDto = new FeedRequestDto();
         requestDto.setTitle(title);
         requestDto.setContent(content);
@@ -66,7 +69,7 @@ public class FeedApiController {
     public ResponseEntity<?> update(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id,
                                     @RequestParam(value = "image", required = false) MultipartFile image,
                                     @RequestParam(value = "title") String title,
-                                    @RequestParam(value = "content") String content) {
+                                    @RequestParam(value = "content") String content) throws IOException {
         FeedRequestDto requestDto = new FeedRequestDto();
         requestDto.setTitle(title);
         requestDto.setContent(content);
@@ -84,6 +87,6 @@ public class FeedApiController {
     }
 
     private void checkToken(UserDetailsImpl userDetails) {
-        if (userDetails == null) throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
+        if (userDetails == null) throw new BlossomException(BlossomErrorCode.NOT_FOUND_USER, null);
     }
 }

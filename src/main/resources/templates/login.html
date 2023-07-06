@@ -63,8 +63,8 @@
 
                 window.location.href = host;
             })
-            .fail(function (jqXHR, textStatus) {
-                alert("로그인 실패");
+            .fail(function (res, jqXHR, textStatus) {
+                alert(res.responseText);
                 window.location.href = host + '/blossom/user/login'
             });
     }

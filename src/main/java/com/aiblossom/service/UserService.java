@@ -1,11 +1,14 @@
 package com.aiblossom.service;
 
-import com.aiblossom.common.Exception.HanghaeBlogErrorCode;
-import com.aiblossom.common.Exception.HanghaeBlogException;
+import com.aiblossom.common.Exception.BlossomErrorCode;
+import com.aiblossom.common.Exception.BlossomException;
 import com.aiblossom.common.dto.ApiResult;
 import com.aiblossom.common.image.ImageUploader;
 import com.aiblossom.common.security.UserDetailsImpl;
-import com.aiblossom.dto.*;
+import com.aiblossom.dto.AuthRequestDto;
+import com.aiblossom.dto.PasswordRequestDto;
+import com.aiblossom.dto.ProfileRequestDto;
+import com.aiblossom.dto.ProfileResponseDto;
 import com.aiblossom.entity.User;
 import com.aiblossom.entity.UserRoleEnum;
 import com.aiblossom.repository.UserRepository;
@@ -42,7 +45,7 @@ public class UserService {
         UserRoleEnum role = requestDto.getRole();
 
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+            throw new BlossomException(BlossomErrorCode.IN_USED_ID, null);
         }
 
         User user = new User(username, password, email, role); // 이메일 추가
@@ -63,26 +66,22 @@ public class UserService {
         // 비밀번호 확인
         System.out.println(requestDto.getPassword());
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.WRONG_PASSWORD, null);
+            throw new BlossomException(BlossomErrorCode.WRONG_PASSWORD, null);
         }
         return true; // 수정 페이지로 넘어가기 전 비밀번호 확인
     }
 
     @Transactional
-    public ApiResult updateProfile(UserDetailsImpl userDetails, ProfileRequestDto requestDto, MultipartFile image) {
+    public ApiResult updateProfile(UserDetailsImpl userDetails, ProfileRequestDto requestDto, MultipartFile image) throws IOException {
         User user = userDetails.getUser(); // 로그인 된 유저에 맞는 정보 담기
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User targetUser = userRepository.findById(user.getId()).orElseThrow(() ->
-                new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null));
+                new BlossomException(BlossomErrorCode.NOT_FOUND_USER, null));
 
         if (image != null) {
-            try {
-                String imageUrl = imageUploader.upload(image, "image");
-                System.out.println("imageUrl = " + imageUrl);
-                requestDto.setImageUrl(imageUrl);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            String imageUrl = imageUploader.upload(image, "image");
+            System.out.println("imageUrl = " + imageUrl);
+            requestDto.setImageUrl(imageUrl);
         }
 
         targetUser.update(requestDto);
@@ -92,20 +91,15 @@ public class UserService {
 
 
 
-    public String sendMail(String email){
+    public String sendMail(String email) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         String authCode = createCode();
-        try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             mimeMessageHelper.setTo(email); // 메일 수신자
             mimeMessageHelper.setSubject("이메일 인증을 위한 인증 코드 발송"); // 메일 제목
             mimeMessageHelper.setText(authCode); // 인증 코드
             javaMailSender.send(mimeMessage);
             return authCode;
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private String createCode() {    // 이메일 인증번호 생성 메서드
@@ -114,7 +108,6 @@ public class UserService {
 
         for (int i = 0; i < 6; i++) {
             int index = random.nextInt(4);
-
             switch (index) {
                 case 0:
                     key.append((char) ((int) random.nextInt(26) + 97));

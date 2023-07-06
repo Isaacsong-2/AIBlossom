@@ -1,7 +1,7 @@
 package com.aiblossom.service;
 
-import com.aiblossom.common.Exception.HanghaeBlogErrorCode;
-import com.aiblossom.common.Exception.HanghaeBlogException;
+import com.aiblossom.common.Exception.BlossomErrorCode;
+import com.aiblossom.common.Exception.BlossomException;
 import com.aiblossom.common.constant.ProjConst;
 import com.aiblossom.common.dto.ApiResult;
 import com.aiblossom.common.jwt.JwtUtil;
@@ -17,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class HeartFeedService {
@@ -33,21 +31,21 @@ public class HeartFeedService {
         User user = userDetails.getUser();
 
         if (user == null) {
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null);
+            throw new BlossomException(BlossomErrorCode.NOT_FOUND_USER, null);
         }
         // 좋아요 누른 게시글 find
         Feed feed = postRepository.findById(feedId)
-                .orElseThrow(() -> new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_POST, null));
+                .orElseThrow(() -> new BlossomException(BlossomErrorCode.NOT_FOUND_POST, null));
 
         // 좋아요누른게시글이 로그인사용자 본인게시글이면 좋아요 불가능
         if (user.getId().equals(feed.getUser().getId())) {
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.CAN_NOT_MINE, null);
+            throw new BlossomException(BlossomErrorCode.CAN_NOT_MINE, null);
         }
 
         // 중복 좋아요 방지
         HeartFeed heartFeed = heartFeedRepository.findByFeed_IdAndUser_Id(feedId, user.getId());
         if (heartFeed != null){
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.OVERLAP_HEART, null);
+            throw new BlossomException(BlossomErrorCode.OVERLAP_HEART, null);
         }
 
         // HeartFeedRepository DB저장
@@ -62,18 +60,18 @@ public class HeartFeedService {
         User user = userDetails.getUser();
 
         if (user == null) {
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_USER, null);
+            throw new BlossomException(BlossomErrorCode.NOT_FOUND_USER, null);
         }
 
         // HeartFeed entity find
         HeartFeed heartFeed = heartFeedRepository.findByFeed_IdAndUser_Id(feedId, user.getId());
         if (heartFeed == null){
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.NOT_FOUND_HEART, null);
+            throw new BlossomException(BlossomErrorCode.NOT_FOUND_HEART, null);
         }
 
         // 좋아요 누른 본인이거나 admin일경우만 삭제가능하도록 체크
         if (this.checkValidUser(user, heartFeed)) {
-            throw new HanghaeBlogException(HanghaeBlogErrorCode.UNAUTHORIZED_USER, null);
+            throw new BlossomException(BlossomErrorCode.UNAUTHORIZED_USER, null);
         }
 
         heartFeedRepository.delete(heartFeed);

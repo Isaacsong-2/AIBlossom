@@ -49,8 +49,8 @@
         }).done(function (res){
             console.log(res)
             code = res;
-        }).fail(function (){
-            alert("이메일 전송 실패");
+        }).fail(function (res){
+            alert(res.responseText);
         })
     }
 

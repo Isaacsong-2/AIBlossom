@@ -58,8 +58,8 @@
         }).done(function () {
             window.location.href = host
             alert("피드작성 완료")
-        }).fail(function () {
-            alert("피드작성 실패");
+        }).fail(function (res) {
+            alert(res);
         })
     }
 </script>
