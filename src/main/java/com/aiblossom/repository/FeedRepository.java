@@ -9,5 +9,6 @@ import java.util.List;
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     List<Feed> findAllByOrderByCreatedAtDesc();
 
-//    List<Feed> findByUser(User user);
+    List<Feed> findAllByUser(User user);
+
 }

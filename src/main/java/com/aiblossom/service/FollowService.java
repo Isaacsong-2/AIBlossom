@@ -2,6 +2,8 @@ package com.aiblossom.service;
 
 import com.aiblossom.common.jwt.JwtUtil;
 import com.aiblossom.common.security.UserDetailsImpl;
+import com.aiblossom.dto.FeedResponseDto;
+import com.aiblossom.entity.Feed;
 import com.aiblossom.entity.Follow;
 import com.aiblossom.entity.User;
 import com.aiblossom.repository.FeedRepository;
@@ -11,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,4 +77,18 @@ public class FollowService {
         // followRepository DB 삭제
         followRepository.delete(follow);
         }
+
+    public List<FeedResponseDto> viewFollowingPostList(User user) {
+        List<FeedResponseDto> feedList = new ArrayList<>();
+        List<Follow> follows = followRepository.findAllByFollowerUser(user);
+        List<User> userList = new ArrayList<>();
+        for (Follow follow : follows) {
+            userList.add(follow.getFollowingUser());
+        }
+        for (User foundUser : userList){
+            List<Feed> foundFeedList =  feedRepository.findAllByUser(foundUser);
+            feedList.addAll(foundFeedList.stream().map(FeedResponseDto::new).toList());
+        }
+        return feedList;
     }
+}
