@@ -182,7 +182,7 @@
                 </div>
                 <span th:text="${comment.username}">&nbsp;&nbsp;</span>
                 <span th:text="${comment.modifiedAt}"></span>
-                <input id="comment-modify-input" placeholder="수정하실 댓글내용을 입력해 주세요.">
+                <input th:id="'comment-modify-input-' + ${comment.id}" placeholder="수정하실 댓글내용을 입력해 주세요.">
                 <button id="modify-btn" th:comment="${comment.id}"
                         th:onclick="modifyComment(this.getAttribute('comment'))">수정
                 </button>
@@ -262,7 +262,10 @@
     /*<![CDATA[*/
     function modifyComment(id) {
         let feedId = [[${feed.id}]];
-        let content = $('#comment-modify-input').val();
+        let inputId = 'comment-modify-input-' + id;
+        let content = $('${inputId}').val();
+        console.log(content)
+
         $.ajax({
             type: "PUT",
             url: `/blossom/comment/` + id,
