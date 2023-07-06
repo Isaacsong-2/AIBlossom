@@ -2,7 +2,6 @@ package com.aiblossom.service;
 
 import com.aiblossom.common.jwt.JwtUtil;
 import com.aiblossom.common.security.UserDetailsImpl;
-import com.aiblossom.entity.Feed;
 import com.aiblossom.entity.Follow;
 import com.aiblossom.entity.User;
 import com.aiblossom.repository.FeedRepository;
@@ -12,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
