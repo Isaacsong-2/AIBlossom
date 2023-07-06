@@ -20,11 +20,6 @@ public class AuthRequestDto {
 
     @Email
     private String email;
-
     private UserRoleEnum role = UserRoleEnum.USER; // 회원 권한 (ADMIN, USER)
 
-    public AuthRequestDto(User user) {
-        username = user.getUsername();
-        email = user.getEmail();
-    }
 }
