@@ -263,7 +263,7 @@
     function modifyComment(id) {
         let feedId = [[${feed.id}]];
         let inputId = 'comment-modify-input-' + id;
-        let content = $('${inputId}').val();
+        let content = $('#' + inputId).val();
         console.log(content)
 
         $.ajax({
