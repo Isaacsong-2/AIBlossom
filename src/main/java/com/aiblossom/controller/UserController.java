@@ -3,6 +3,7 @@ package com.aiblossom.controller;
 import com.aiblossom.common.dto.ApiResult;
 import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.*;
+import com.aiblossom.entity.User;
 import com.aiblossom.entity.UserRoleEnum;
 import com.aiblossom.service.UserService;
 import jakarta.mail.MessagingException;
@@ -64,12 +65,20 @@ public class UserController {
     @GetMapping("/user-info")
     @ResponseBody
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String username = userDetails.getUser().getUsername();
-        String introduction = userDetails.getUser().getIntroduction();
-        UserRoleEnum role = userDetails.getUser().getRole();
-        String imageUrl = userDetails.getUser().getImageUrl();
+        User user = userDetails.getUser();
+        Long id = user.getId();
+        String username = user.getUsername();
+        String introduction = user.getIntroduction();
+        UserRoleEnum role = user.getRole();
+        String imageUrl = user.getImageUrl();
         boolean isAdmin = (role == UserRoleEnum.ADMIN);
-        return new UserInfoDto(username, introduction, isAdmin, imageUrl);
+        return new UserInfoDto(id, username, introduction, isAdmin, imageUrl);
+    }
+
+    @GetMapping("/users")
+    @ResponseBody
+    public List<UserInfoDto> getUsers(){
+        return userService.findAll();
     }
 
     @GetMapping("/user/profile/manage")

@@ -59,6 +59,7 @@ function addProfile() {
                     <div>
                     <button onclick="createFeed()">피드 작성</button>
                     <button onclick="modifyProfile()">프로필 수정</button>
+                    <button onclick="follow()">팔로우 기능</button>
                     <button onclick="logout()">로그 아웃</button>
                     </div>
                 </div>
@@ -97,12 +98,8 @@ function loadFeeds() {
         }
     });
 
+
 function addHTML(feed) {
-    /**
-     * class="search-itemDto" 인 녀석에서
-     * image, title, lprice, addProduct 활용하기
-     * 참고) onclick='addProduct(${JSON.stringify(itemDto)})'
-     */
     return `<div class="feed">
                 <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
                     <div class="image">
@@ -137,4 +134,7 @@ function addHTML(feed) {
 function logout(){
     Cookies.remove('Authorization', {path: '/'});
     window.location.href = host;
+}
+function follow(){
+    window.location.href = host + '/blossom/follow';
 }

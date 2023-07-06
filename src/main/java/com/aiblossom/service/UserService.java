@@ -5,10 +5,7 @@ import com.aiblossom.common.Exception.BlossomException;
 import com.aiblossom.common.dto.ApiResult;
 import com.aiblossom.common.image.ImageUploader;
 import com.aiblossom.common.security.UserDetailsImpl;
-import com.aiblossom.dto.AuthRequestDto;
-import com.aiblossom.dto.PasswordRequestDto;
-import com.aiblossom.dto.ProfileRequestDto;
-import com.aiblossom.dto.ProfileResponseDto;
+import com.aiblossom.dto.*;
 import com.aiblossom.entity.User;
 import com.aiblossom.entity.UserRoleEnum;
 import com.aiblossom.repository.UserRepository;
@@ -25,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 @Slf4j
@@ -124,5 +122,10 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow();
+    }
+
+    public List<UserInfoDto> findAll() {
+        return userRepository.findAll().stream().map(UserInfoDto::new).toList();
+
     }
 }

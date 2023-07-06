@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>팔로우 페이지</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+</head>
+<style>
+    .feed {
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        background-color: #f8f8f8;
+    }
+
+    .image img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    .feedContent h4 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    .description p {
+        margin: 0;
+        color: #666;
+    }
+
+    .feedUser span b {
+        font-weight: bold;
+        color: #555;
+    }
+</style>
+<body>
+<h1>User List</h1>
+<ul id="user-list">
+    <!-- 유저 목록 아이템들 -->
+    <li>User 1</li>
+    <li>User 2</li>
+    <li>User 3</li>
+    <!-- ... -->
+</ul>
+
+<h1>Posts</h1>
+<ul id="post-list">
+
+</ul>
+</body>
+<script>
+    host = "http://localhost:8080"
+    $(document).ready(function () {
+        const auth = getToken();
+        if (auth !== undefined && auth !== '') {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader('Authorization', auth);
+            });
+        }
+        loadFeeds();
+        loadUsers();
+    })
+
+    function getToken() {
+        let auth = Cookies.get('Authorization');
+        if (auth === undefined) {
+            return '';
+        }
+
+        return auth;
+    }
+
+    function loadFeeds() {
+        // 스크롤 이벤트 리스너 등록
+        // 스크롤이 맨 아래로 내려갔을 때 새로운 피드 추가
+        // 새로운 피드 가져오기
+        $.ajax({
+            url: 'http://localhost:8080/blossom/follow/following/post',
+            method: 'GET',
+            success: function (response) {
+                console.log(response)
+                $('#post-list').empty();
+                response.forEach(feed => {
+                    let addHtml = addHTML(feed);
+                    $('#post-list').append(addHtml)
+                });
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function addHTML(feed) {
+        return `<div class="feed">
+                <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
+                    <div class="image">
+                        <img src="${feed.imageUrl}">
+                    </div>
+                </a>
+                <div class="feedContent">
+                    <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
+                        <h4>${feed.title}</h4>
+                        <div class="description">
+                            <p>${feed.content}</p>
+                        </div>
+                        <div> <p> 좋아요 개수: ${feed.heartNum}</p></div>
+                    </a>
+                    <div class="subInfo">
+                        <span> ${feed.modifiedAt} </span>
+                        <span class="seperator"></span>
+                    </div>
+                </div>
+                <div class="feedUser">
+                    <a class="userInfo" href="">
+                        <span>
+                            "by "
+                            <b>${feed.username}</b>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            `
+    }
+
+    function loadUsers() {
+        // 스크롤 이벤트 리스너 등록
+        // 스크롤이 맨 아래로 내려갔을 때 새로운 피드 추가
+        // 새로운 피드 가져오기
+        $.ajax({
+            url: 'http://localhost:8080/blossom/users',
+            method: 'GET',
+            success: function (response) {
+                console.log(response)
+                $('#user-list').empty();
+                response.forEach(profile => {
+                    let addHtml = addProfile(profile);
+                    $('#user-list').append(addHtml)
+                });
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function addProfile(profile) {
+        return `<div class="feed">
+                    <div><span>프로필</span></div>
+                    <div class="image">
+                        <img src="${profile.imageUrl}">
+                    </div>
+                     <div class="feedContent">
+                        <h4>${profile.username}</h4>
+                        <div class="description">
+                            <p>${profile.introduction}</p>
+                        </div>
+                    </div>
+                    <div>
+                    <button onclick="follow(${profile.id})">팔로우</button>
+                    <button onclick="unfollow(${profile.id})">언팔로우</button>
+                    </div>
+                </div>`
+    }
+    function follow(id){
+        $.ajax({
+            type: "POST",
+            url: `/blossom/follow/`+id,
+            contentType: "application/json",
+        }).done(function () {
+            alert("팔로우 성공");
+            window.location.href = host + "/blossom/follow"
+        }).fail(function (res) {
+            alert(res.responseText);
+        })
+    }
+    function unfollow(id){
+        $.ajax({
+            type: "DELETE",
+            url: `/blossom/follow/`+id,
+            contentType: "application/json",
+        }).done(function () {
+            alert("언팔로우 성공")
+            window.location.href = host + "/blossom/follow"
+        }).fail(function (res) {
+            alert(res.responseText);
+        })
+    }
+</script>
+</html>
