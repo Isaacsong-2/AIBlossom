@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,7 +22,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column
@@ -37,6 +37,12 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    @OneToMany(mappedBy = "followingUser")
+    private List<Follow> followingList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followerUser")
+    private List<Follow> followerList = new ArrayList<>();
 
 
     @Builder
