@@ -9,7 +9,133 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
 </head>
+<style>
+    /* styles.css */
 
+    /* feed 클래스 스타일 */
+    .feed {
+        background-color: #f5f5f5;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    /* image 클래스 스타일 */
+    .image {
+        text-align: center;
+    }
+
+    .image img {
+        width: 200px;
+        height: 200px;
+    }
+
+    /* feedContent 클래스 스타일 */
+    .feedContent {
+        margin-top: 10px;
+    }
+
+    /* description 클래스 스타일 */
+    .description {
+        margin-bottom: 10px;
+    }
+
+    /* subInfo 클래스 스타일 */
+    .subInfo {
+        color: #777;
+    }
+
+    .subInfo .seperator {
+        margin: 0 5px;
+    }
+
+    /* feedUser 클래스 스타일 */
+    .feedUser {
+        margin-top: 10px;
+    }
+
+    /* 수정 및 삭제 버튼 스타일 */
+    .feed button {
+        margin-right: 5px;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    /* 좋아요 버튼 스타일 */
+    .feed button.likeBtn {
+        background-color: #28a745;
+    }
+
+    .feed button.dislikeBtn {
+        background-color: #dc3545;
+    }
+
+    /* 댓글 관련 스타일 */
+    #form-commentInfo {
+        margin-top: 20px;
+    }
+
+    #comment-count {
+        margin-bottom: 10px;
+    }
+
+    #comment-input {
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    #submit {
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    #comments {
+        margin-top: 20px;
+    }
+
+    #comments li {
+        margin-bottom: 10px;
+    }
+
+    #comments li input {
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    #comments li button {
+        margin-right: 5px;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    #comments li button.modify-btn {
+        background-color: #ffc107;
+    }
+
+    #comments li button.delete-btn {
+        background-color: #dc3545;
+    }
+
+    #comments li button.likeBtn {
+        background-color: #28a745;
+    }
+
+    #comments li button.dislikeBtn {
+        background-color: #dc3545;
+    }
+</style>
 <body>
 <div class="feed">
     <div class="image">

@@ -106,7 +106,7 @@ function loadFeeds() {
         return `<div class="feed">
                     <a class="feedHref" href="http://localhost:8080/blossom/feed/${feed.id}">
                         <div class="image">
-                            <img src="">
+                            <img src="${feed.imageUrl}">
                         </div>
                     </a>
                     <div class="feedContent">
