@@ -177,7 +177,24 @@
     <div id=comments>
         <ul>
             <li th:each="comment : ${feed.commentList}">
-
+                <div>
+                    <span th:text="${comment.content}"></span>
+                </div>
+                <span th:text="${comment.username}">&nbsp;&nbsp;</span>
+                <span th:text="${comment.modifiedAt}"></span>
+                <input th:id="'comment-modify-input-' + ${comment.id}" placeholder="수정하실 댓글내용을 입력해 주세요.">
+                <button id="modify-btn" th:comment="${comment.id}"
+                        th:onclick="modifyComment(this.getAttribute('comment'))">수정
+                </button>
+                <button id="delete-btn" th:comment="${comment.id}"
+                        th:onclick="deleteComment(this.getAttribute('comment'))">삭제
+                </button>
+                <br>
+                <span>댓글 좋아요 개수:  </span>
+                <span th:text="${comment.heartNum}"></span>
+                <button th:comment="${comment.id}" th:onclick="commentLike(this.getAttribute('comment'))">좋아요</button>
+                <button th:comment="${comment.id}" th:onclick="commentDislike(this.getAttribute('comment'))">좋아요 취소
+                </button>
             </li>
         </ul>
     </div>
