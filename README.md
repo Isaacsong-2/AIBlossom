@@ -56,7 +56,7 @@
     - 팔로우한 유저의 게시물 조회
 
 ## 시연 영상
-링크
+[AIBlossom 시연영상 링크](https://www.youtube.com/watch?v=Sj0ybLcqF-A)
 
 ## ERD
 ![](https://github.com/Isaacsong-2/AIBlossom/assets/131439725/15bd56ee-71f0-4505-a928-f752b905a422)
