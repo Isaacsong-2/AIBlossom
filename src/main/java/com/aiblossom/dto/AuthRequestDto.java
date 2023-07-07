@@ -1,5 +1,6 @@
 package com.aiblossom.dto;
 
+import com.aiblossom.entity.User;
 import com.aiblossom.entity.UserRoleEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -19,6 +20,6 @@ public class AuthRequestDto {
 
     @Email
     private String email;
-
     private UserRoleEnum role = UserRoleEnum.USER; // 회원 권한 (ADMIN, USER)
+
 }

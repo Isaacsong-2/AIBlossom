@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import lombok.Setter;
+
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -13,15 +16,15 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_user") //
     User followingUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_user")
     User followerUser;
 
-    public Follow(User followingUser, User followerUser) {
+    public Follow(User followingUser, User followerUser){
         this.followingUser = followingUser;
         this.followerUser = followerUser;
     }

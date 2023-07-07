@@ -1,6 +1,8 @@
 package com.aiblossom.service;
 
 
+import com.aiblossom.common.Exception.BlossomErrorCode;
+import com.aiblossom.common.Exception.BlossomException;
 import com.aiblossom.common.image.ImageUploader;
 import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.FeedRequestDto;
@@ -24,14 +26,10 @@ public class FeedService {
     private final FeedRepository feedRepository;
     private final ImageUploader imageUploader;
 
-    public FeedResponseDto save(UserDetailsImpl userDetails, FeedRequestDto requestDto, MultipartFile image) {
+    public FeedResponseDto save(UserDetailsImpl userDetails, FeedRequestDto requestDto, MultipartFile image) throws IOException {
         if (image != null) {
-            try {
-                String imageUrl = imageUploader.upload(image, "image");
-                requestDto.setImageUrl(imageUrl);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            String imageUrl = imageUploader.upload(image, "image");
+            requestDto.setImageUrl(imageUrl);
         }
         Feed feed = Feed.builder()
                 .title(requestDto.getTitle())
@@ -51,32 +49,26 @@ public class FeedService {
 
     public FeedResponseDto findOne(Long id) {
         return new FeedResponseDto(feedRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")));
+                new BlossomException(BlossomErrorCode.NOT_FOUND_POST, null)));
     }
 
     @Transactional
-    public FeedResponseDto update(UserDetailsImpl userDetails, Long id, FeedRequestDto requestDto, MultipartFile image) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public FeedResponseDto update(UserDetailsImpl userDetails, Long id, FeedRequestDto requestDto, MultipartFile image) throws IOException {
         Feed feed = feedRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
+                new BlossomException(BlossomErrorCode.NOT_FOUND_POST, null));
         if (feed.getUser().getId().equals(userDetails.getUser().getId()) ||
                 userDetails.getRole().equals(UserRoleEnum.ADMIN.toString())) {
             if (image != null) {
-                try {
                     String imageUrl = imageUploader.upload(image, "image");
                     requestDto.setImageUrl(imageUrl);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             }
             feed.update(requestDto);
             return new FeedResponseDto(feed);
-        } else throw new IllegalArgumentException("수정 권한이 없습니다.");
+        } else throw new BlossomException(BlossomErrorCode.UNAUTHORIZED_USER, null);
     }
 
     @Transactional
     public void delete(UserDetailsImpl userDetails, Long id) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Feed feed = feedRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
         if (feed.getUser().getId().equals(userDetails.getUser().getId()) ||

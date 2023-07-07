@@ -1,5 +1,7 @@
 package com.aiblossom.controller;
 
+import com.aiblossom.common.Exception.BlossomErrorCode;
+import com.aiblossom.common.Exception.BlossomException;
 import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.CommentRequestDto;
 import com.aiblossom.dto.CommentUpdateRequestDto;
@@ -38,7 +40,7 @@ public class CommentController {
     }
 
     private void checkToken(UserDetailsImpl userDetails) {
-        if (userDetails == null) throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
+        if (userDetails == null) throw new BlossomException(BlossomErrorCode.NOT_FOUND_USER,null);
     }
 
 }

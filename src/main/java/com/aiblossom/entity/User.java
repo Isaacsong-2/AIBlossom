@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -35,7 +38,22 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @OneToMany(mappedBy = "followingUser")
+    private List<Follow> followingList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followerUser")
+    private List<Follow> followerList = new ArrayList<>();
+
+
     @Builder
+    public User(String username, String password,String imageUrl, String email, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.imageUrl = imageUrl;
+        this.email = email;
+        this.role = role;
+    }
+
     public User(String username, String password, String email, UserRoleEnum role) {
         this.username = username;
         this.password = password;
@@ -48,5 +66,11 @@ public class User {
         this.password = requestDto.getPassword();
         this.imageUrl = requestDto.getImageUrl();
         this.introduction = requestDto.getIntroduction();
+    }
+
+    public User update(String name, String profileImageUrl) {
+        this.username = name;
+        this.imageUrl = profileImageUrl;
+        return this;
     }
 }

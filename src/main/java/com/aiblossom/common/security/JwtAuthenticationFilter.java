@@ -20,13 +20,10 @@ import java.io.IOException;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
-    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
         setFilterProcessesUrl("/blossom/user/login-page");
-        setAuthenticationSuccessHandler(authenticationSuccessHandler);
     }
 
     @Override

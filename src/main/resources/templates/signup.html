@@ -49,8 +49,8 @@
         }).done(function (res){
             console.log(res)
             code = res;
-        }).fail(function (){
-            alert("이메일 전송 실패");
+        }).fail(function (res){
+            alert(res.responseText);
         })
     }
 
@@ -68,9 +68,8 @@
                 data: JSON.stringify({username: username, password: password, email: email}),
             }).done(function () {
                 window.location.href = host
-            }).fail(function () {
-                alert("회원가입 실패");
-                window.location.href = host
+            }).fail(function (res) {
+                alert(res.responseText);
             })
         } else{ alert("인증코드가 일치하지 않습니다.") }
     }
