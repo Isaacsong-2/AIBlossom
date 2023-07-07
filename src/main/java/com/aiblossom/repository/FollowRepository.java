@@ -1,5 +1,8 @@
 package com.aiblossom.repository;
 
+
+public class FollowRepository {
+
 import com.aiblossom.entity.Follow;
 import com.aiblossom.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

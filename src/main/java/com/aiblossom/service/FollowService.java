@@ -1,5 +1,6 @@
 package com.aiblossom.service;
 
+public class FollowService {
 import com.aiblossom.common.jwt.JwtUtil;
 import com.aiblossom.common.security.UserDetailsImpl;
 import com.aiblossom.dto.FeedResponseDto;
